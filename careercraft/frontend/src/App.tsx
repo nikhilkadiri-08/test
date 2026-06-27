@@ -6,6 +6,7 @@ import { Canvas } from './components/Canvas';
 import type { CanvasCardInstance } from './components/Canvas';
 import { CareerBlueprintPanel } from './components/CareerBlueprintPanel';
 import { DiscoveryModal } from './components/DiscoveryModal';
+import { SkillWeb } from './components/SkillWeb';
 
 export const App: React.FC = () => {
   // 1. Unlocked Elements State (Loaded from LocalStorage or Starters)
@@ -32,6 +33,9 @@ export const App: React.FC = () => {
   // 5. Discovery Modal State
   const [discoveredElement, setDiscoveredElement] = useState<CraftElement | null>(null);
   const [isFirstWorldwide, setIsFirstWorldwide] = useState(false);
+
+  // 6. Active View Mode (Workspace Canvas vs Skill Web Graph)
+  const [activeView, setActiveView] = useState<'canvas' | 'web'>('canvas');
 
   // Sync state to local storage
   useEffect(() => {
@@ -214,16 +218,49 @@ export const App: React.FC = () => {
         activeBlueprint={activeBlueprint}
       />
 
-      {/* 2. Main Drag-and-Drop Workspace Canvas */}
-      <Canvas
-        canvasElements={canvasElements}
-        activeBlueprint={activeBlueprint}
-        onCombineElements={handleCombineElements}
-        onRemoveElementFromCanvas={handleRemoveElementFromCanvas}
-        onDuplicateElement={handleDuplicateElement}
-        onUpdateElementPosition={handleUpdateElementPosition}
-        onClearCanvas={handleClearCanvas}
-      />
+      {/* 2. Main Workspace Center */}
+      <div className="flex-1 h-full flex flex-col relative">
+        {/* Toggle tabs for Canvas vs Web */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center p-1 bg-dark-800/80 border border-slate-700/50 rounded-xl backdrop-blur shadow-lg z-30 pointer-events-auto">
+          <button
+            onClick={() => setActiveView('canvas')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              activeView === 'canvas'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+            }`}
+          >
+            Crafting Canvas
+          </button>
+          <button
+            onClick={() => setActiveView('web')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              activeView === 'web'
+                ? 'bg-rose-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+            }`}
+          >
+            Skill Spider Web
+          </button>
+        </div>
+
+        {activeView === 'canvas' ? (
+          <Canvas
+            canvasElements={canvasElements}
+            activeBlueprint={activeBlueprint}
+            onCombineElements={handleCombineElements}
+            onRemoveElementFromCanvas={handleRemoveElementFromCanvas}
+            onDuplicateElement={handleDuplicateElement}
+            onUpdateElementPosition={handleUpdateElementPosition}
+            onClearCanvas={handleClearCanvas}
+          />
+        ) : (
+          <SkillWeb
+            activeBlueprint={activeBlueprint}
+            onSelectBlueprint={setActiveBlueprint}
+          />
+        )}
+      </div>
 
       {/* 3. Right Sidebar (Career Blueprint - Dream Job Mode) */}
       <CareerBlueprintPanel
