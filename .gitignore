@@ -1,0 +1,30 @@
+# Local envs
+.venv/
+node-env/
+node_modules/
+dist/
+build/
+.env
+
+# Python caching & logs
+__pycache__/
+*.py[cod]
+*$py.class
+*.pth
+*.npy
+*.zip
+*.log
+
+# Editor & OS files
+.DS_Store
+.claude/
+.idea/
+.vscode/
+
+# Project-specific artifacts from RL training
+ppo_checkpoints/
+ppo_logs/
+*.png
+*.json
+!package.json
+!tsconfig.json
