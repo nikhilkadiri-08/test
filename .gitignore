@@ -2,8 +2,10 @@
 .venv/
 node-env/
 node_modules/
+soilsense/.node/
 dist/
 build/
+*.tsbuildinfo
 .env
 
 # Python caching & logs
